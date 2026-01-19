@@ -1,10 +1,16 @@
+// Reservations.jsx
 import { Link } from "react-router-dom";
 import "../styles/reservations.css";
+import CancelReservation from "./CancelReservation";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-function Reservations({ reservations, onRefresh }) {
-  const location = useLocation();
+
+
+
+
+function Reservations({ reservations, onCancel,onRefresh }) {
+const location = useLocation();
 
   const handleCardMove = (e) => {
     const card = e.currentTarget;
@@ -15,11 +21,15 @@ function Reservations({ reservations, onRefresh }) {
     card.style.setProperty("--my", `${y}%`);
   };
 
-  useEffect(() => {
-    onRefresh();
-  }, [location.pathname]);
+  
+useEffect(() => {
+  onRefresh();
+}, [location.pathname]);
+
 
   return (
+
+    
     <div className="reservations-page">
       <div className="reservations-header">
         <div>
@@ -32,20 +42,27 @@ function Reservations({ reservations, onRefresh }) {
         </Link>
       </div>
 
-      {reservations.length === 0 && (
-        <div className="empty-box">
-          <h3>No keys in hand — yet.</h3>
-          <p>
-            Your next <span id="Blue">B</span>
-            <span id="dark-blue">M</span>
-            <span id="red">W</span>{" "}
-            experience starts with a single choice. Browse the fleet and book your drive.
-          </p>
-          <Link to="/cars" className="primary">
-            Explore Fleet →
-          </Link>
-        </div>
-      )}
+
+      {/* EMPTY STATE */}
+{reservations.length === 0 && (
+  <div className="empty-box">
+    <h3>No keys in hand — yet.</h3>
+    <p>
+      Your next <span id="Blue">B</span>
+      <span id="dark-blue">M</span>
+      <span id="red">W</span>{" "}
+      experience starts with a single choice. Browse the fleet and book your drive.
+    </p>
+    <Link to="/cars" className="primary">
+      Explore Fleet →
+    </Link>
+  </div>
+)}
+
+
+
+
+
 
       {reservations.map((res) => (
         <div
@@ -80,6 +97,30 @@ function Reservations({ reservations, onRefresh }) {
             <div className="price">${res.total_price}</div>
             <div className="reservation-id">ID: {res.reservation_id}</div>
           </div>
+
+          {/* ✅ CANCEL (component-based, authorized) */}
+          {res.status !== "accepted" && (
+            <CancelReservation
+              reservation={res}
+              onCancel={onCancel}
+            />
+          )}
+
+          {/* ✅ UPDATE (link-based, clean) */}
+          {res.status === "pending" && (
+            <Link
+              to="/update-reservation"
+              className="update-btn"
+              onClick={() =>
+                localStorage.setItem(
+                  "reservationToUpdate",
+                  JSON.stringify(res)
+                )
+              }
+            >
+              Update
+            </Link>
+          )}
         </div>
       ))}
     </div>
