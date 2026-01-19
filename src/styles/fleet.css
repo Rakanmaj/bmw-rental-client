@@ -1,0 +1,232 @@
+
+/* ---------------- CARS PAGE HERO ---------------- */
+
+.cars-hero {
+  padding-top: 90px;
+  padding-bottom: 80px;
+}
+
+.cars-hero .fleet-header {
+  margin-bottom: 0;
+}
+
+.cars-hero .fleet-title {
+  font-size: 46px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+/* subtle fade like screenshot */
+.cars-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    80% 60% at 10% 10%,
+    rgba(14,165,255,0.08),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+
+
+
+
+/* ---------------- FLEET ---------------- */
+.fleet {
+  padding: 70px 40px 100px;
+  max-width:1200px;
+  margin: 0 auto;
+}
+
+/* Overlay full-bleed solid background to hide grid for sections that should be darker */
+.fleet, .features {
+  position: relative;
+  z-index: 0;
+}
+.fleet::before, .features::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  background-color: var(--bg-solid);
+  z-index: -1;
+}
+
+.fleet h2 {
+  margin-bottom: 6px;
+}
+
+/* fleet header (tag + heading + intro + action) */
+.fleet-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:24px;
+  margin-bottom:28px;
+}
+.fleet-left {
+  max-width:740px;
+}
+.section-tag{
+  display:inline-block;
+  color:#9fd6ff;
+  font-size:13px;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+.fleet-intro{
+  color:#9aa6b3;
+  max-width:720px;
+}
+.fleet-right{
+  display:flex;
+  align-items:center;
+}
+.view-all{
+  background: rgba(255,255,255,0.03);
+  border-radius:12px;
+  padding:10px 16px;
+}
+
+.cards {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, 360px);
+  justify-content: center;
+  margin-top: 100px;
+}
+
+.card-body .desc {
+  color: #9aa6b3;
+  font-size: 14px;
+  line-height: 1.55;
+  margin-bottom: 14px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;   /* limit lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+.car-card {
+  background: linear-gradient(180deg,var(--bg-surface), #0c131b);
+  padding: 0; /* body has internal padding */
+  border-radius: 14px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  border: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+  display:flex;
+  flex-direction:column;
+  width: 100%;
+  height: 100%; /* allow stretch */
+  max-width: 360px;
+  margin-bottom: 110px;
+}
+
+.car-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(3,10,20,0.6);
+}
+
+.car-card h3 {
+  margin: 10px 0 4px;
+}
+
+.car-card p {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.car-card strong {
+  display: block;
+  margin-top: 5px;
+}
+
+.card-media img {
+  width: 100%;
+  height: 220px; /* increased to reduce upscaling artifacts when displayed larger */
+  object-fit: cover;
+  display:block;
+  /* subtle smoothing + contrast to reduce blockiness */
+  filter: blur(0.28px) contrast(1.04) saturate(1.03);
+  image-rendering: auto;
+  transform: translateZ(0);
+  will-change: transform, filter;
+}
+.card-media{
+  position:relative;
+}
+/* subtle grain overlay to mask compression artifacts */
+.card-media::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.06;
+  background-image: linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02) 100%);
+  background-size: 6px 6px;
+}
+.card-body{
+  padding:16px 18px;
+  background: linear-gradient(180deg, rgba(6,11,16,0.02), rgba(3,8,12,0.9));
+  color:#cfe2ea;
+  flex: 1; /* 🔥 THIS is the key */
+  display:flex;
+  flex-direction:column;
+}
+
+
+.card-body .series{
+  color:#89a6b8;
+  font-size:13px;
+}
+.card-body h3{ margin:8px 0 8px; }
+.card-body .desc{ color:#9aa6b3; font-size:14px; line-height:1.55; margin-bottom:14px; }
+.card-stats{ color:#9aa6b3; display:flex; gap:14px; font-size:13px; margin-bottom:10px; }
+.card-body hr{ border:0; height:1px; background:rgba(255,255,255,0.03); margin:10px 0 12px; }
+.card-footer{ display:flex; align-items:center; justify-content:space-between; }
+.card-footer .price{ color:#cfe2ea; font-size:18px; }
+.primary.small{ padding:8px 14px; border-radius:10px; }
+
+.car-card .pill{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(180deg,var(--accent),var(--accent-2));
+  color:#042033;
+  padding:6px 10px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.car-card button {
+  margin-top: 12px;
+  background: linear-gradient(180deg,var(--accent),var(--accent-2));
+  border: none;
+  padding: 8px 18px;
+  border-radius: 10px;
+  color: #042033;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(14,165,255,0.08);
+}
+
+.card-footer {
+  margin-top: auto; /* 🔥 pins footer to bottom */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-stats {
+  min-height: 22px; /* keeps spacing consistent */
+}
