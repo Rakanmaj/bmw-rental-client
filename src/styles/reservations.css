@@ -1,0 +1,477 @@
+/* =====================================
+   PAGE BASE
+===================================== */
+.reservations-page {
+  padding: 120px 80px 140px;
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(14,165,255,0.08), transparent 60%),
+    radial-gradient(900px 500px at 80% 30%, rgba(255,255,255,0.03), transparent 65%),
+    linear-gradient(180deg, #05070a, #030507);
+  color: #e7edf3;
+  min-height: 100vh;
+}
+.empty-box::before {
+  pointer-events: none;
+}
+
+#Blue {
+  color: #2996ff;
+  font-weight: 800;
+}
+
+#dark-blue {
+  color: #1c69d4;
+  font-weight: 800;
+}
+
+#red {
+  color: #e10600;
+  font-weight: 800;
+}
+
+/* ===============================
+   BMW "KEY UNLOCK" CTA ANIMATION
+================================ */
+
+.primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Page fade-in */
+.reservations-page {
+  animation: pageIn 0.7s ease-out both;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger cards automatically (works for first 8 cards) */
+.reservation-card {
+  animation: cardIn 0.6s ease-out both;
+}
+
+.reservation-card:nth-child(1) { animation-delay: 0.05s; }
+.reservation-card:nth-child(2) { animation-delay: 0.10s; }
+.reservation-card:nth-child(3) { animation-delay: 0.15s; }
+.reservation-card:nth-child(4) { animation-delay: 0.20s; }
+.reservation-card:nth-child(5) { animation-delay: 0.25s; }
+.reservation-card:nth-child(6) { animation-delay: 0.30s; }
+.reservation-card:nth-child(7) { animation-delay: 0.35s; }
+.reservation-card:nth-child(8) { animation-delay: 0.40s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reservation-card {
+  position: relative;
+  overflow: hidden;
+}
+.reservation-card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(420px 160px at var(--mx, 30%) var(--my, 30%),
+    rgba(14,165,255,0.16), transparent 60%);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events:none;
+}
+.reservation-card:hover::before{ opacity: 1; }
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+/* ⏳ Pending */
+.status.pending {
+  color: #facc15; /* soft BMW yellow */
+  background: rgba(250, 204, 21, 0.12);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.15);
+}
+
+/* ✅ Accepted */
+.status.accepted {
+  color: #22c55e; /* premium green */
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.15);
+}
+
+/* ❌ Denied */
+.status.denied {
+  color: #ef4444; /* BMW-style red */
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.18);
+}
+
+.admin-note {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  line-height: 1.5;
+  color: #fca5a5;
+
+  background: linear-gradient(
+    180deg,
+    rgba(239, 68, 68, 0.12),
+    rgba(239, 68, 68, 0.04)
+  );
+
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.admin-note::before {
+  content: "Admin Note";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.96); opacity: 0.40; }
+  50%      { transform: scale(1.05); opacity: 0.70; }
+}
+
+.reservation-card img {
+  transition: transform .35s ease, filter .35s ease;
+  filter: saturate(1.05) contrast(1.05);
+}
+.reservation-card:hover img {
+  transform: scale(1.03);
+  filter: saturate(1.12) contrast(1.08);
+}
+
+
+/* Hover lift */
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 50px rgba(14,165,255,0.25);
+}
+.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 25px rgba(14,165,255,0.18);
+}
+
+
+/* Key-unlock light sweep */
+.primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 120%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    rgba(255,255,255,0.35),
+    transparent 60%
+  );
+
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  z-index: 0;
+}
+
+/* Activate sweep */
+.primary:hover::before {
+  left: 120%;
+}
+
+/* Keep text above animation */
+.primary span,
+.primary {
+  z-index: 1;
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+.reservations-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 50px;
+}
+
+.reservations-header h1 {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.reservations-header p {
+  color: #9aa6b3;
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+/* =====================================
+   EMPTY STATE (WOW MODE)
+===================================== */
+.empty-box {
+  max-width: 720px;
+  margin: 120px auto;
+  padding: 80px 60px;
+  text-align: center;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7)),
+    linear-gradient(180deg, #0b1016, #06090d);
+
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.75);
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle animated BMW diagonal */
+.empty-box::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 45%,
+      rgba(14,165,255,0.15) 48%,
+      transparent 52%
+    );
+  animation: drift 70s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes drift {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-3%) translateY(-2%); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+.empty-visual {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #0ea5ff, #0a5fb7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  color: #042033;
+  box-shadow: 0 20px 60px rgba(14,165,255,0.25);
+}
+
+.empty-box h3 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.empty-box p {
+  color: #9aa6b3;
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* =====================================
+   RESERVATION CARD
+===================================== */
+.reservation-card {
+  display: grid;
+  grid-template-columns: 240px 1fr 200px auto;
+  gap: 30px;
+  align-items: center;
+  padding: 28px;
+  margin-bottom: 28px;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7)),
+    linear-gradient(180deg, #0b1016, #06090d);
+
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reservation-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 50px 140px rgba(0,0,0,0.85);
+}
+
+/* IMAGE */
+.reservation-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* INFO */
+.reservation-info h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.status {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.status.pending {
+  background: rgba(14,165,255,0.15);
+  color: #0ea5ff;
+}
+
+.reservation-info p {
+  color: #9aa6b3;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* PRICE */
+.reservation-price strong {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0ea5ff;
+}
+
+/* CANCEL */
+.cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(239,68,68,0.5);
+  color: #ef4444;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.cancel-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+/* =====================================
+   MODAL
+===================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.7)),
+    linear-gradient(180deg, #0b1016, #06090d);
+  border-radius: 20px;
+  padding: 36px;
+  width: 420px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.8);
+}
+
+.modal h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.modal p {
+  color: #9aa6b3;
+  margin-bottom: 28px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.modal-actions button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-actions .danger {
+  background: #ef4444;
+  color: white;
+}
+
+.update-btn {
+  background: linear-gradient(180deg, #0ea5ff, #0a5fb7);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 10px;
+  box-shadow: 0 14px 40px rgba(14,165,255,0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.update-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 70px rgba(14,165,255,0.35);
+}
+
+.update-btn:active {
+  transform: translateY(0);
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+@media (max-width: 1100px) {
+  .reservation-card {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .reservation-price {
+    text-align: left;
+  }
+}
