@@ -9,41 +9,6 @@ import "../styles/fleet.css";
 function Fleet({ onSelectCar = () => {} }) {
   
 
-  const cars = [
-   {
-       id: "m8-competition",
-       name: "BMW M8 Competition",
-       type: "Coupe",
-       series: "8 Series • 2024",
-       price: 599,
-       hp: "617 HP",
-       speed: "2.9s 0–60",
-       image: M8Img,
-       desc: "BMW's most powerful coupe — pure speed, elegant design, unmatched presence.",
-     },
-    {
-        id: "xm",
-        name: "BMW XM",
-        type: "SUV",
-        series: "M Hybrid • 2024",
-        price: 529,
-        hp: "644 HP",
-        speed: "4.1s 0–60",
-        image: XMImg,
-        desc: "A bold, electrified M monster — extreme design, massive torque, hybrid power.",
-      },
-    {
-      id: "bmw-m5-cs",
-      name: "BMW M5 CS",
-      type: "Sedan",
-      series: "5 Series • 2023 Limited",
-      price: 499,
-      hp: "627 HP",
-      speed: "2.8s 0–60",
-      image: M5CS,
-      desc: "BMW’s fastest production car ever — lightweight, track-ready, and brutally quick."
-    },
-  ];
   return (
     <section className="fleet">
       <div className="fleet-header">

@@ -11,9 +11,11 @@ import Confirm from "./components/Confirm";
 import CarsPage from "./components/CarsPage";
 import About from "./components/About";
 import Reservations from "./components/Reservations";
-import Admin from "./components/Admin";
 import Auth from "./components/Auth";
+import Admin from "./components/Admin";
+import axios from "axios";
 import RequireAuth from "./components/RequireAuth";
+import UpdateReservation from "./components/UpdateReservation";
 
 function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -32,68 +34,29 @@ function App() {
   const [reservations, setReservations] = useState([]);
   const [cars, setCars] = useState([]);
   const [adminReservations, setAdminReservations] = useState([]);
+  const [editReservation, setEditReservation] = useState(null);
 
+  // Fetch cars once (single source of truth)
   useEffect(() => {
     const storedCars = localStorage.getItem("carsData");
 
     if (storedCars) {
       setCars(JSON.parse(storedCars));
     } else {
-      const mockCars = [
-        {
-          id: 1,
-          car_id: 1,
-          type: "Convertible",
-          series: "Z SERIES",
-          name: "BMW Z4",
-          desc: "Open-top performance with sharp handling and premium comfort.",
-          hp: "382 hp",
-          speed: "0–100 in 4.5s",
-          image_url: "Z4Img.png",
-          price_per_day: 299,
-        },
-        {
-          id: 2,
-          car_id: 2,
-          type: "SUV",
-          series: "X SERIES",
-          name: "BMW X5",
-          desc: "Luxury SUV with confident power and all-weather capability.",
-          hp: "335 hp",
-          speed: "0–100 in 5.3s",
-          image_url: "X5Img.png",
-          price_per_day: 249,
-        },
-        {
-          id: 3,
-          car_id: 3,
-          type: "Sedan",
-          series: "M SERIES",
-          name: "BMW M5",
-          desc: "Executive sedan with supercar-level performance and comfort.",
-          hp: "617 hp",
-          speed: "0–100 in 3.3s",
-          image_url: "M5.png",
-          price_per_day: 349,
-        },
-        {
-          id: 4,
-          car_id: 4,
-          type: "Coupe",
-          series: "M SERIES",
-          name: "BMW M4",
-          desc: "Track-ready coupe with aggressive styling and precise control.",
-          hp: "503 hp",
-          speed: "0–100 in 3.9s",
-          image_url: "M4_Convertible.png",
-          price_per_day: 329,
-        },
-      ];
-
-      setCars(mockCars);
-      localStorage.setItem("carsData", JSON.stringify(mockCars));
+      fetchCarsData();
     }
   }, []);
+
+  const fetchCarsData = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/cars");
+      const data = await res.json();
+      setCars(data);
+      localStorage.setItem("carsData", JSON.stringify(data));
+    } catch (error) {
+      console.error("Error fetching cars data", error);
+    }
+  };
 
   const handleSelectCar = (car) => {
     setSelectedCar(car);
@@ -102,6 +65,7 @@ function App() {
   const handleLogin = (userData) => {
     setUserDetails(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    fetchReservations();
   };
 
   const handleLogout = () => {
@@ -119,6 +83,7 @@ function App() {
     if (storedUser) {
       const user = JSON.parse(storedUser);
       setUserDetails(user);
+      fetchReservations();
     }
   }, []);
 
@@ -127,28 +92,72 @@ function App() {
       ...prev,
       { ...reservation, status: "pending", adminNote: "" },
     ]);
+    fetchReservations();
   };
 
-  const refreshReservations = () => {
-    const stored = localStorage.getItem("reservations");
-    const list = stored ? JSON.parse(stored) : [];
-    setReservations(list);
+  const fetchReservations = () => {
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    if (!user) return;
+
+    axios
+      .get(`http://localhost:3000/api/reservations/user/${user.user_id}`, {
+        headers: {
+          "x-user-id": user.user_id,
+          "x-user-role": user.role,
+        },
+      })
+      .then((response) => {
+        setReservations(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reservations:", error);
+      });
+  };
+
+  const fetchReservationsAdmin = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    axios
+      .get("http://localhost:3000/api/reservations", {
+        headers: {
+          "x-user-id": user.user_id,
+          "x-user-role": user.role,
+        },
+      })
+      .then((response) => {
+        setAdminReservations(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching admin reservations:", error);
+      });
   };
 
   useEffect(() => {
-    refreshReservations();
-  }, []);
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
 
-  useEffect(() => {
-    setAdminReservations(reservations);
-  }, [reservations]);
+    if (user && user.role === "admin") {
+      fetchReservationsAdmin();
+    }
+  }, [userDetails.role]);
+
+  const handleCancelReservation = (id) => {
+    setReservations((prev) =>
+      prev.filter((r) => r.reservation_id !== id)
+    );
+  };
 
   const handleUpdateReservationStatus = (id, status, note) => {
     setAdminReservations((prev) =>
       prev.map((r) =>
-        r.reservation_id === id ? { ...r, status, admin_note: note } : r
+        r.reservation_id === id
+          ? { ...r, status, admin_note: note }
+          : r
       )
     );
+    fetchReservations();
   };
 
   return (
@@ -162,7 +171,10 @@ function App() {
             <>
               <Navbar user={userDetails} onLogout={handleLogout} />
               <Hero />
-              <WeatherSuggestions onSelectCar={handleSelectCar} cars={cars} />
+              <WeatherSuggestions
+                onSelectCar={handleSelectCar}
+                cars={cars}
+              />
               <Features />
               <Footer />
             </>
@@ -188,6 +200,7 @@ function App() {
                 selectedCar={selectedCar}
                 datesData={datesData}
                 onSaveDates={setDatesData}
+                editReservation={editReservation}
               />
             </RequireAuth>
           }
@@ -202,6 +215,7 @@ function App() {
                 datesData={datesData}
                 userData={userDetails}
                 onSaveUserDetails={setUserDetails}
+                editReservation={editReservation}
               />
             </RequireAuth>
           }
@@ -224,16 +238,15 @@ function App() {
         <Route
           path="/reservations"
           element={
-            <RequireAuth>
-              <>
-                <Navbar user={userDetails} onLogout={handleLogout} />
-                <Reservations
-                  reservations={reservations}
-                  onRefresh={refreshReservations}
-                />
-                <Footer />
-              </>
-            </RequireAuth>
+            <>
+              <Navbar user={userDetails} onLogout={handleLogout} />
+              <Reservations
+                reservations={reservations}
+                onCancel={handleCancelReservation}
+                onRefresh={fetchReservations}
+              />
+              <Footer />
+            </>
           }
         />
 
@@ -249,22 +262,28 @@ function App() {
         />
 
         <Route
-          path="/admin"
+          path="/update-reservation"
           element={
             <RequireAuth>
-              <>
-                <Navbar user={userDetails} onLogout={handleLogout} />
-                {userDetails.role === "admin" ? (
-                  <Admin
-                    reservations={adminReservations}
-                    onUpdateStatus={handleUpdateReservationStatus}
-                  />
-                ) : (
-                  <p>You do not have permission to access the admin page.</p>
-                )}
-                <Footer />
-              </>
+              <UpdateReservation />
             </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <>
+              <Navbar user={userDetails} onLogout={handleLogout} />
+              {userDetails.role === "admin" ? (
+                <Admin
+                  reservations={adminReservations}
+                  onUpdateStatus={handleUpdateReservationStatus}
+                />
+              ) : (
+                <p>You do not have permission to access the admin page.</p>
+              )}
+            </>
           }
         />
       </Routes>
