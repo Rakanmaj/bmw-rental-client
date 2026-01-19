@@ -19,35 +19,38 @@ import UpdateReservation from "./components/UpdateReservation";
 
 function App() {
   const [selectedCar, setSelectedCar] = useState(null);
+
   const [datesData, setDatesData] = useState({
     pickupDate: null,
     pickupTime: "",
     returnDate: null,
     returnTime: "",
   });
+
   const [userDetails, setUserDetails] = useState({
     fullName: "",
     email: "",
     phone: "",
     role: "",
   });
+
   const [reservations, setReservations] = useState([]);
   const [cars, setCars] = useState([]);
   const [adminReservations, setAdminReservations] = useState([]);
   const [editReservation, setEditReservation] = useState(null);
 
-  // Fetch cars once (single source of truth)
+  // ✅ Fetch cars once (single source of truth)
   useEffect(() => {
     const storedCars = localStorage.getItem("carsData");
 
     if (storedCars) {
       setCars(JSON.parse(storedCars));
     } else {
-      fetchCarsData();
+      fetchCars();
     }
   }, []);
 
-  const fetchCarsData = async () => {
+  const fetchCars = async () => {
     try {
       const res = await fetch("http://localhost:3000/api/cars");
       const data = await res.json();
@@ -62,43 +65,9 @@ function App() {
     setSelectedCar(car);
   };
 
-  const handleLogin = (userData) => {
-    setUserDetails(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-    fetchReservations();
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUserDetails({
-      fullName: "",
-      email: "",
-      phone: "",
-      role: "",
-    });
-  };
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUserDetails(user);
-      fetchReservations();
-    }
-  }, []);
-
-  const handleCreateReservation = (reservation) => {
-    setReservations((prev) => [
-      ...prev,
-      { ...reservation, status: "pending", adminNote: "" },
-    ]);
-    fetchReservations();
-  };
-
-  const fetchReservations = () => {
+  const fetchUserReservations = () => {
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
-
     if (!user) return;
 
     axios
@@ -116,7 +85,7 @@ function App() {
       });
   };
 
-  const fetchReservationsAdmin = () => {
+  const fetchAdminReservations = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     axios
@@ -134,31 +103,61 @@ function App() {
       });
   };
 
+  const handleLogin = (userData) => {
+    setUserDetails(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+    fetchUserReservations();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUserDetails({
+      fullName: "",
+      email: "",
+      phone: "",
+      role: "",
+    });
+  };
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
-
-    if (user && user.role === "admin") {
-      fetchReservationsAdmin();
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserDetails(user);
+      fetchUserReservations();
     }
-  }, [userDetails.role]);
+  }, []);
+
+  const handleCreateReservation = (reservation) => {
+    setReservations((prev) => [
+      ...prev,
+      { ...reservation, status: "pending", admin_note: "" }, // ✅ fixed naming
+    ]);
+    fetchUserReservations();
+  };
 
   const handleCancelReservation = (id) => {
-    setReservations((prev) =>
-      prev.filter((r) => r.reservation_id !== id)
-    );
+    setReservations((prev) => prev.filter((r) => r.reservation_id !== id));
   };
 
   const handleUpdateReservationStatus = (id, status, note) => {
     setAdminReservations((prev) =>
       prev.map((r) =>
-        r.reservation_id === id
-          ? { ...r, status, admin_note: note }
-          : r
+        r.reservation_id === id ? { ...r, status, admin_note: note } : r
       )
     );
-    fetchReservations();
+
+    fetchUserReservations();
   };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    if (user && user.role === "admin") {
+      fetchAdminReservations();
+    }
+  }, [userDetails.role]);
 
   return (
     <BrowserRouter>
@@ -171,10 +170,7 @@ function App() {
             <>
               <Navbar user={userDetails} onLogout={handleLogout} />
               <Hero />
-              <WeatherSuggestions
-                onSelectCar={handleSelectCar}
-                cars={cars}
-              />
+              <WeatherSuggestions onSelectCar={handleSelectCar} cars={cars} />
               <Features />
               <Footer />
             </>
@@ -243,7 +239,7 @@ function App() {
               <Reservations
                 reservations={reservations}
                 onCancel={handleCancelReservation}
-                onRefresh={fetchReservations}
+                onRefresh={fetchUserReservations}
               />
               <Footer />
             </>

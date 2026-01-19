@@ -2,41 +2,46 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "./navbar";
 import "../styles/reservation.css";
+import "../styles/icons.css";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import { FaBolt, FaTachometerAlt, FaArrowRight } from "react-icons/fa";
+
 function Reservation({ selectedCar = null, datesData, onSaveDates }) {
   const data = selectedCar;
-const [pickupDate, setPickupDate] = useState(datesData?.pickupDate || null);
-const [pickupTime, setPickupTime] = useState(datesData?.pickupTime || "");
-const [returnDate, setReturnDate] = useState(datesData?.returnDate || null);
-const [returnTime, setReturnTime] = useState(datesData?.returnTime || "");
+
+  const [pickupDate, setPickupDate] = useState(datesData?.pickupDate || null);
+  const [pickupTime, setPickupTime] = useState(datesData?.pickupTime || "");
+  const [returnDate, setReturnDate] = useState(datesData?.returnDate || null);
+  const [returnTime, setReturnTime] = useState(datesData?.returnTime || "");
 
   const handleContinue = (e) => {
-  if (!pickupDate || !returnDate) {
-    e.preventDefault();
-    alert("Please choose both pickup and return dates.");
-    return;
-  }
+    if (!pickupDate || !returnDate) {
+      e.preventDefault();
+      alert("Please choose both pickup and return dates.");
+      return;
+    }
 
-  const start = new Date(pickupDate);
-  const end = new Date(returnDate);
+    const start = new Date(pickupDate);
+    const end = new Date(returnDate);
 
-  if (end < start) {
-    e.preventDefault();
-    alert("Return date must be the same or later than pickup date.");
-    return;
-  }
+    if (end < start) {
+      e.preventDefault();
+      alert("Return date must be the same or later than pickup date.");
+      return;
+    }
 
-  const reservationDates = {
-    pickupDate: start,
-    pickupTime,
-    returnDate: end,
-    returnTime,
+    const reservationDates = {
+      pickupDate: start,
+      pickupTime,
+      returnDate: end,
+      returnTime,
+    };
+
+    onSaveDates(reservationDates);
   };
-
-  onSaveDates(reservationDates);  // Save datesData here
-};
 
   return (
     <div className="reservation-page">
@@ -76,8 +81,12 @@ const [returnTime, setReturnTime] = useState(datesData?.returnTime || "");
             <p className="subtitle">{data.series}</p>
 
             <div className="car-stats">
-              <span>⚡ {data.hp}</span>
-              <span>⏱️ {data.speed}</span>
+              <span>
+                <FaBolt className="icon" /> {data.hp}
+              </span>
+              <span>
+                <FaTachometerAlt className="icon" /> {data.speed}
+              </span>
             </div>
 
             <p className="price-label">Price per day</p>
@@ -91,7 +100,6 @@ const [returnTime, setReturnTime] = useState(datesData?.returnTime || "");
           <p className="form-sub">Choose your pickup and return schedule.</p>
 
           <div className="form-grid">
-
             {/* PICKUP */}
             <div className="form-row">
               <div className="field">
@@ -159,7 +167,7 @@ const [returnTime, setReturnTime] = useState(datesData?.returnTime || "");
 
           {/* Continue */}
           <Link to="/details" className="continue-btn" onClick={handleContinue}>
-            Continue →
+            Continue <FaArrowRight className="iconnn" />
           </Link>
         </div>
       </div>
