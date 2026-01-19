@@ -11,6 +11,7 @@ import Confirm from "./components/Confirm";
 import CarsPage from "./components/CarsPage";
 import About from "./components/About";
 import Reservations from "./components/Reservations";
+import Admin from "./components/Admin";
 
 function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -28,6 +29,7 @@ function App() {
   });
   const [reservations, setReservations] = useState([]);
   const [cars, setCars] = useState([]);
+  const [adminReservations, setAdminReservations] = useState([]);
 
   useEffect(() => {
     const storedCars = localStorage.getItem("carsData");
@@ -130,6 +132,20 @@ function App() {
     refreshReservations();
   }, []);
 
+  useEffect(() => {
+    setAdminReservations(reservations);
+  }, [reservations]);
+
+  const handleUpdateReservationStatus = (id, status, note) => {
+    setAdminReservations((prev) =>
+      prev.map((r) =>
+        r.reservation_id === id
+          ? { ...r, status, admin_note: note }
+          : r
+      )
+    );
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -197,7 +213,10 @@ function App() {
           element={
             <>
               <Navbar user={userDetails} onLogout={handleLogout} />
-              <Reservations reservations={reservations} onRefresh={refreshReservations} />
+              <Reservations
+                reservations={reservations}
+                onRefresh={refreshReservations}
+              />
               <Footer />
             </>
           }
@@ -209,6 +228,24 @@ function App() {
             <>
               <Navbar user={userDetails} onLogout={handleLogout} />
               <About />
+              <Footer />
+            </>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <>
+              <Navbar user={userDetails} onLogout={handleLogout} />
+              {userDetails.role === "admin" ? (
+                <Admin
+                  reservations={adminReservations}
+                  onUpdateStatus={handleUpdateReservationStatus}
+                />
+              ) : (
+                <p>You do not have permission to access the admin page.</p>
+              )}
               <Footer />
             </>
           }
