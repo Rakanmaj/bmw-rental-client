@@ -1,0 +1,109 @@
+/* ===============================
+   GLOBAL REACT ICON STYLING
+   =============================== */
+
+.icon {
+  font-size: 1.05rem;
+  color: #1c7cff;            /* BMW blue */
+  opacity: 0.95;
+  vertical-align: middle;
+  transition: 
+    color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.footer a,
+.footer li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  vertical-align: middle;
+}
+
+.continue-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.reservation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Make text + icon centered inside the confirm button */
+.confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Fix the SVG baseline inside the button */
+.confirm-btn .icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  transform: translateY(1px); /* tiny lift to center it */
+}
+
+/* Make icon + text align perfectly */
+.card-stats span,
+.car-stats span {
+  display: inline-flex;      /* or flex if you want full row */
+  align-items: center;
+  gap: 6px;
+  line-height: 1;            /* prevents the icon from dropping */
+}
+.primary,
+.book-btn,
+.confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+
+/* Fix react-icons baseline behavior */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  transform: translateY(-1px); /* tiny lift to match text baseline */
+}
+
+
+/* Hover effect */
+.icon:hover {
+  color: #3b8cff;
+  transform: scale(1.12);
+  opacity: 1;
+}
+
+/* Optional muted icons */
+.icon-muted {
+  color: #9ca3af;
+}
+
+/* Optional success / confirm icons */
+.icon-success {
+  color: #22c55e;
+}
+
+/* Optional warning icons */
+.icon-warning {
+  color: #f59e0b;
+}
+
+/* Optional danger icons */
+.icon-danger {
+  color: #ef4444;
+}

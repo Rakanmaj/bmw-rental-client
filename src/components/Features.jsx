@@ -1,47 +1,62 @@
-import '../styles/features.css'
+import "../styles/features.css";
+import { FaLock, FaClock, FaHeadset, FaMedal } from "react-icons/fa";
 
 function Features() {
   return (
     <section className="features">
-
       <div className="features-header">
         <span className="section-sub">WHY CHOOSE US</span>
         <h2>The BMW Rental Difference</h2>
-        <p className="features-intro">We don't just rent cars—we deliver exceptional experiences with every drive.</p>
+        <p className="features-intro">
+          We don't just rent cars—we deliver exceptional experiences with every drive.
+        </p>
       </div>
 
       <div className="feature-grid">
-
         <div className="feature">
-        <span className="feature-accent" />
-          <div className="feature-icon">🔒</div>
+          <span className="feature-accent" />
+          <div className="feature-icon">
+            <FaLock className="icon" />
+          </div>
           <h4>Full Insurance Coverage</h4>
-          <p>Drive with confidence knowing you're fully protected with our comprehensive insurance package.</p>
+          <p>
+            Drive with confidence knowing you're fully protected with our comprehensive insurance package.
+          </p>
         </div>
 
         <div className="feature">
-            <span className="feature-accent" />
-          <div className="feature-icon">⏱️</div>
+          <span className="feature-accent" />
+          <div className="feature-icon">
+            <FaClock className="icon" />
+          </div>
           <h4>Flexible Rentals</h4>
-          <p>From hourly to monthly rentals, we offer flexible booking options to suit your needs.</p>
+          <p>
+            From hourly to monthly rentals, we offer flexible booking options to suit your needs.
+          </p>
         </div>
 
         <div className="feature">
-            <span className="feature-accent" />
-          <div className="feature-icon">🎧</div>
+          <span className="feature-accent" />
+          <div className="feature-icon">
+            <FaHeadset className="icon" />
+          </div>
           <h4>24/7 Support</h4>
-          <p>Our dedicated team is available around the clock to assist you with any questions.</p>
+          <p>
+            Our dedicated team is available around the clock to assist you with any questions.
+          </p>
         </div>
 
         <div className="feature">
-            <span className="feature-accent" />
-          <div className="feature-icon">🏅</div>
+          <span className="feature-accent" />
+          <div className="feature-icon">
+            <FaMedal className="icon" />
+          </div>
           <h4>Premium Quality</h4>
-          <p>Every BMW in our fleet is meticulously maintained to ensure peak performance.</p>
+          <p>
+            Every BMW in our fleet is meticulously maintained to ensure peak performance.
+          </p>
         </div>
-
       </div>
-
     </section>
   );
 }

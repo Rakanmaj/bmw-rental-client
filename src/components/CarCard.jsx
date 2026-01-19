@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
-import "../styles/fleet.css"; 
+import { FaBolt, FaTachometerAlt, FaArrowRight } from "react-icons/fa";
+import "../styles/fleet.css";
+import "../styles/icons.css";
 function CarCard({ car, onSelectCar }) {
   return (
     <div className="car-card">
@@ -19,13 +21,19 @@ function CarCard({ car, onSelectCar }) {
         <h3>{car.name}</h3>
         <p className="desc">{car.description}</p>
 
+        {/* STATS */}
         <div className="card-stats">
-          <span>⚡ {car.hp}</span>
-          <span>⏱️ {car.speed}</span>
+          <span>
+            <FaBolt className="icon" /> {car.hp}
+          </span>
+          <span>
+            <FaTachometerAlt className="icon" />{car.speed}
+          </span>
         </div>
 
         <hr />
 
+        {/* FOOTER */}
         <div className="card-footer">
           <div className="price">
             <strong>${car.price_per_day}</strong>
@@ -37,7 +45,7 @@ function CarCard({ car, onSelectCar }) {
             className="primary small"
             onClick={() => onSelectCar(car)}
           >
-            Book Now →
+            Book Now <FaArrowRight />
           </Link>
         </div>
       </div>

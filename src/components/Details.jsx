@@ -1,26 +1,18 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { FaBolt, FaTachometerAlt, FaCheck, FaArrowRight } from "react-icons/fa";
 import Navbar from "./navbar";
 import "../styles/details.css";
 
-function Details({ selectedCar, datesData, userData, onSaveUserDetails })  {
-
+function Details({ selectedCar, datesData, userData, onSaveUserDetails }) {
   const [fullName, setFullName] = useState(userData?.fullName || "");
-const [email, setEmail] = useState(userData?.email || "");
-const [phone, setPhone] = useState(userData?.phone || "");
+  const [email, setEmail] = useState(userData?.email || "");
+  const [phone, setPhone] = useState(userData?.phone || "");
 
+  const handleSave = () => {
+    onSaveUserDetails({ fullName, email, phone });
+  };
 
-const handleSave = () => {
-  onSaveUserDetails({
-    fullName,
-    email,
-    phone,
-    
-  });
-};
-
-
- 
   const handleHoverMove = (e) => {
     const box = e.currentTarget;
     const rect = box.getBoundingClientRect();
@@ -30,12 +22,13 @@ const handleSave = () => {
     box.style.setProperty("--y", `${y}px`);
   };
 
-
-  const oneDay = 24 * 60 * 60 * 1000;
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // ✅ naming convention
   const diffDays = Math.max(
     1,
-    Math.round(Math.abs(datesData.returnDate - datesData.pickupDate) / oneDay)
+    Math.round(Math.abs(datesData.returnDate - datesData.pickupDate) / ONE_DAY_MS)
   );
+
+  const totalPrice = diffDays * selectedCar.price_per_day;
 
   return (
     <div className="details-page">
@@ -44,7 +37,9 @@ const handleSave = () => {
       {/* ---- GLOBAL STEPPER ---- */}
       <div className="global-stepper">
         <div className="step-item completed">
-          <div className="circle check">✓</div>
+          <div className="circle check">
+            <FaCheck className="icon" />
+          </div>
           <span>Dates</span>
         </div>
 
@@ -65,7 +60,6 @@ const handleSave = () => {
 
       {/* ---- LAYOUT ---- */}
       <div className="details-layout">
-
         {/* LEFT CARD */}
         <div className="details-car-card">
           <img src={`/assets/${selectedCar.image_url}`} alt="" className="car-img" />
@@ -76,20 +70,20 @@ const handleSave = () => {
             <p className="subtitle">{selectedCar.series}</p>
 
             <div className="car-stats">
-              <span>⚡ {selectedCar.hp}</span>
-              <span>⏱️ {selectedCar.speed}</span>
+              <span>
+                <FaBolt className="icon" /> {selectedCar.hp}
+              </span>
+              <span>
+                <FaTachometerAlt className="icon" /> {selectedCar.speed}
+              </span>
             </div>
 
             <p className="price-label">Price per day</p>
             <div className="price">${selectedCar.price_per_day}</div>
 
-            <div className="days-box"
-            
-            onMouseMove={handleHoverMove}
-        >
+            <div className="days-box" onMouseMove={handleHoverMove}>
               <span>{diffDays} days</span>
-
-              <strong>${diffDays * selectedCar.price_per_day}</strong>
+              <strong>${totalPrice}</strong>
             </div>
           </div>
         </div>
@@ -130,20 +124,15 @@ const handleSave = () => {
 
           {/* BUTTONS */}
           <div className="details-buttons">
-             <Link 
-    to={`/reserve/${selectedCar.id}`} 
-    className="back-btn"
-  >
-    Back
-  </Link>
-
-
             <Link
-              to="/confirm"
-              className="continue-btn"
-              onClick={handleSave}
+              to={`/reserve/${selectedCar.car_id}`}  // ✅ fixed id key
+              className="back-btn"
             >
-              Review Booking →
+              Back
+            </Link>
+
+            <Link to="/confirm" className="continue-btn" onClick={handleSave}>
+              Review Booking <FaArrowRight className="icon" />
             </Link>
           </div>
         </div>
