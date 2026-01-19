@@ -1,0 +1,247 @@
+/* =====================================================
+   NAVBAR BASE (UNCHANGED STRUCTURE & BACKGROUND)
+===================================================== */
+.navbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 18px 48px;
+  height: 74px;
+  overflow: hidden;
+
+  background: linear-gradient(
+    180deg,
+    rgba(8,11,16,0.96),
+    rgba(5,8,12,0.92)
+  );
+
+  box-shadow:
+    0 4px 18px rgba(0,0,0,0.65),
+    inset 0 -1px 0 rgba(255,255,255,0.04);
+}
+
+/* =====================================================
+   BMW M DIAGONAL STRIPES (UNCHANGED)
+===================================================== */
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -140px;
+  width: 520px;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    #0ea5ff 0%,
+    #0a5fb7 42%,
+    #02060a 43%,
+    #02060a 100%
+  );
+  z-index: 0;
+}
+
+.navbar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 290px;
+  width: 200px;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    #d0182b,
+    #8b0d15
+  );
+  z-index: 0;
+  opacity: 0.9;
+}
+
+/* =====================================================
+   CONTENT LAYER
+===================================================== */
+.brand,
+.links,
+.nav-left {
+  position: relative;
+  z-index: 2;
+}
+
+/* =====================================================
+   BRAND (DO NOT TOUCH)
+===================================================== */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand .logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-text h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.brand-text .subtitle {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.7);
+}
+
+.admin-link {
+  border-left: 1px solid rgba(255,255,255,0.15);
+  padding-left: 18px;
+}
+
+.admin-link.active {
+  color: #d0182b; /* BMW red */
+}
+
+/* =====================================================
+   CENTER NAV LINKS (CLASSY BMW STYLE)
+===================================================== */
+.links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+/* clean text link */
+.nav-link {
+  position: relative;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-decoration: none;
+  padding: 6px 2px;
+  transition: color 0.25s ease;
+}
+
+/* BMW underline */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #2996ff,
+    #1c69d4,
+    #e10600
+  );
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.nav-link.active {
+  color: #ffffff;
+}
+
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* =====================================================
+   HOME BUTTON (MATTE PRIMARY)
+===================================================== */
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 22px;
+  border-radius: 20px;
+  text-decoration: none;
+
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.12),
+    rgba(0,0,0,0.65)
+  );
+
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 12px 30px rgba(0,0,0,0.55);
+
+  transition: all 0.25s ease;
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    0 18px 45px rgba(0,0,0,0.75);
+}
+
+.nav-btn.active {
+  border-color: #1c69d4;
+}
+
+/* =====================================================
+   SIGN IN (RIGHT SIDE – PREMIUM ACCESS)
+===================================================== */
+.nav-left {
+  position: absolute;
+  right: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-left .nav-link {
+  padding: 10px 22px;
+  border-radius: 22px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06),
+    rgba(0,0,0,0.7)
+  );
+
+  border: 1px solid rgba(255,255,255,0.18);
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+/* BMW unlock hover */
+.nav-left .nav-link:hover {
+  color: #ffffff;
+  border-color: #1c69d4;
+  box-shadow:
+    0 0 0 2px rgba(28,105,212,0.25),
+    0 20px 50px rgba(0,0,0,0.8);
+}
+
+/* remove underline from sign in */
+.nav-left .nav-link::after {
+  display: none;
+}
