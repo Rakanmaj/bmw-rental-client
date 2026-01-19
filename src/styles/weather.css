@@ -1,0 +1,154 @@
+/* =====================================
+   WEATHER SECTION — BASE
+===================================== */
+.weather-section {
+  padding: 120px 80px;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(1000px 600px at 15% 20%, rgba(14,165,255,0.12), transparent 60%),
+    radial-gradient(800px 500px at 80% 30%, rgba(255,255,255,0.03), transparent 65%),
+    linear-gradient(180deg, #05070a, #030507);
+
+  color: #e7edf3;
+}
+
+/* subtle grid texture */
+.weather-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* =====================================
+   CONTENT CONTAINER
+===================================== */
+.weather-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+.weather-header {
+  max-width: 620px;
+  margin-bottom: 70px;
+}
+
+.weather-header .tag {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #0ea5ff;
+  font-weight: 700;
+}
+
+.weather-header h2 {
+  font-size: 42px;
+  margin: 14px 0;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.weather-header p {
+  color: #9aa6b3;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  padding-bottom: 32px;
+}
+
+/* =====================================
+   WEATHER MOOD EFFECTS
+===================================== */
+
+/* Clouds */
+.weather-clouds::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(60% 40% at 30% 30%, rgba(255,255,255,0.05), transparent 60%),
+    radial-gradient(50% 35% at 70% 40%, rgba(255,255,255,0.04), transparent 65%);
+  animation: cloudMove 90s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes cloudMove {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-6%); }
+  100% { transform: translateX(0); }
+}
+
+/* Rain */
+.weather-rain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -60deg,
+    rgba(255,255,255,0.06),
+    rgba(255,255,255,0.06) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+  animation: rainFall 0.9s linear infinite;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+@keyframes rainFall {
+  from { background-position: 0 0; }
+  to { background-position: 0 200px; }
+}
+
+/* Clear / Sunny glow */
+.weather-clear {
+  background:
+    radial-gradient(600px 300px at 70% 20%, rgba(255,215,120,0.12), transparent),
+    linear-gradient(180deg, #05070a, #030507);
+}
+
+/* =====================================
+   CAR GRID
+===================================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+ 
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+@media (max-width: 1100px) {
+  .weather-section {
+    padding: 100px 40px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .weather-header h2 {
+    font-size: 34px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
