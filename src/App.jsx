@@ -12,6 +12,8 @@ import CarsPage from "./components/CarsPage";
 import About from "./components/About";
 import Reservations from "./components/Reservations";
 import Admin from "./components/Admin";
+import Auth from "./components/Auth";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -97,6 +99,11 @@ function App() {
     setSelectedCar(car);
   };
 
+  const handleLogin = (userData) => {
+    setUserDetails(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserDetails({
@@ -139,9 +146,7 @@ function App() {
   const handleUpdateReservationStatus = (id, status, note) => {
     setAdminReservations((prev) =>
       prev.map((r) =>
-        r.reservation_id === id
-          ? { ...r, status, admin_note: note }
-          : r
+        r.reservation_id === id ? { ...r, status, admin_note: note } : r
       )
     );
   };
@@ -149,6 +154,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/auth" element={<Auth onLogin={handleLogin} />} />
+
         <Route
           path="/"
           element={
@@ -176,49 +183,57 @@ function App() {
         <Route
           path="/reserve/:carId"
           element={
-            <Reservation
-              selectedCar={selectedCar}
-              datesData={datesData}
-              onSaveDates={setDatesData}
-            />
+            <RequireAuth>
+              <Reservation
+                selectedCar={selectedCar}
+                datesData={datesData}
+                onSaveDates={setDatesData}
+              />
+            </RequireAuth>
           }
         />
 
         <Route
           path="/details"
           element={
-            <Details
-              selectedCar={selectedCar}
-              datesData={datesData}
-              userData={userDetails}
-              onSaveUserDetails={setUserDetails}
-            />
+            <RequireAuth>
+              <Details
+                selectedCar={selectedCar}
+                datesData={datesData}
+                userData={userDetails}
+                onSaveUserDetails={setUserDetails}
+              />
+            </RequireAuth>
           }
         />
 
         <Route
           path="/confirm"
           element={
-            <Confirm
-              selectedCar={selectedCar}
-              datesData={datesData}
-              userDetails={userDetails}
-              onCreateReservation={handleCreateReservation}
-            />
+            <RequireAuth>
+              <Confirm
+                selectedCar={selectedCar}
+                datesData={datesData}
+                userDetails={userDetails}
+                onCreateReservation={handleCreateReservation}
+              />
+            </RequireAuth>
           }
         />
 
         <Route
           path="/reservations"
           element={
-            <>
-              <Navbar user={userDetails} onLogout={handleLogout} />
-              <Reservations
-                reservations={reservations}
-                onRefresh={refreshReservations}
-              />
-              <Footer />
-            </>
+            <RequireAuth>
+              <>
+                <Navbar user={userDetails} onLogout={handleLogout} />
+                <Reservations
+                  reservations={reservations}
+                  onRefresh={refreshReservations}
+                />
+                <Footer />
+              </>
+            </RequireAuth>
           }
         />
 
@@ -236,18 +251,20 @@ function App() {
         <Route
           path="/admin"
           element={
-            <>
-              <Navbar user={userDetails} onLogout={handleLogout} />
-              {userDetails.role === "admin" ? (
-                <Admin
-                  reservations={adminReservations}
-                  onUpdateStatus={handleUpdateReservationStatus}
-                />
-              ) : (
-                <p>You do not have permission to access the admin page.</p>
-              )}
-              <Footer />
-            </>
+            <RequireAuth>
+              <>
+                <Navbar user={userDetails} onLogout={handleLogout} />
+                {userDetails.role === "admin" ? (
+                  <Admin
+                    reservations={adminReservations}
+                    onUpdateStatus={handleUpdateReservationStatus}
+                  />
+                ) : (
+                  <p>You do not have permission to access the admin page.</p>
+                )}
+                <Footer />
+              </>
+            </RequireAuth>
           }
         />
       </Routes>

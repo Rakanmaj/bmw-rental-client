@@ -1,0 +1,241 @@
+:root {
+  /* BMW Core */
+  --bmw-blue: #1c69d4;
+  --bmw-dark-blue: #0b3c6d;
+  --bmw-m-red: #e10600;
+
+  /* Neutral Luxury */
+  --bmw-black: #0b0d10;
+  --bmw-charcoal: #14171c;
+  --bmw-graphite: #1c2128;
+  --bmw-steel: #8f96a3;
+  --bmw-silver: #cfd3d8;
+
+  --bmw-border: rgba(255,255,255,0.08);
+}
+
+/* ================================
+   PAGE BASE
+================================ */
+.auth-page {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(800px 400px at 20% 10%, rgba(28,105,212,0.12), transparent),
+    radial-gradient(600px 300px at 80% 80%, rgba(255,255,255,0.04), transparent),
+    linear-gradient(180deg, #05070a, #030507);
+  color: #e7edf3;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+.auth-page::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 45%,
+      rgba(28,105,212,0.06),
+      transparent 55%
+    );
+  animation: bgMove 45s linear infinite;
+  pointer-events: none;
+}
+
+
+#Blue {
+  color: #2996ff;
+  font-weight: 500;
+}
+
+#dark-blue {
+  color: #1c69d4;
+  font-weight: 500;
+}
+
+#red {
+  color: #e10600;
+  font-weight: 500;
+}
+
+@keyframes bmwFlow {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-6%); }
+  100% { transform: translateX(0); }
+}
+
+/* ================================
+   CARD
+================================ */
+.auth-card {
+  width: 420px;
+  padding: 38px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.75)),
+    linear-gradient(180deg, var(--bmw-charcoal), var(--bmw-black));
+  border: 1px solid var(--bmw-border);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.85);
+  animation: cardEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================================
+   BRAND
+================================ */
+.auth-brand {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.auth-brand h1 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.auth-brand h1::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin: 10px auto 0;
+  background: linear-gradient(
+    90deg,
+    var(--bmw-blue),
+    var(--bmw-dark-blue)
+  );
+  border-radius: 4px;
+}
+
+.auth-brand p {
+  font-size: 14px;
+  color: var(--bmw-steel);
+  margin-top: 10px;
+}
+
+/* ================================
+   TOGGLE (BMW M TOUCH)
+================================ */
+.auth-toggle {
+  display: flex;
+  background: #101318;
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+
+.auth-toggle button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--bmw-steel);
+  padding: 11px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-toggle button.active {
+  background:
+    linear-gradient(
+      90deg,
+      var(--bmw-blue),
+      var(--bmw-dark-blue)
+    );
+  color: white;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* ================================
+   INPUTS
+================================ */
+.auth-field {
+  margin-bottom: 18px;
+}
+
+.auth-field label {
+  font-size: 13px;
+  color: var(--bmw-silver);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.auth-field input {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.65);
+  border: 1px solid var(--bmw-border);
+  color: white;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.auth-field input:focus {
+  outline: none;
+  border-color: var(--bmw-blue);
+  box-shadow: 0 0 0 2px rgba(28,105,212,0.25);
+}
+
+/* ================================
+   BUTTON (MATTE, BMW STYLE)
+================================ */
+.auth-submit {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--bmw-border);
+  background: linear-gradient(180deg, #2b2f36, #1e2228);
+  color: var(--bmw-silver);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-submit:hover {
+  border-color: var(--bmw-blue);
+  box-shadow: 0 18px 40px rgba(28,105,212,0.25);
+  transform: translateY(-1px);
+}
+
+/* ================================
+   FOOTER
+================================ */
+.auth-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--bmw-steel);
+  margin-top: 22px;
+}
+
+.auth-footer span {
+  color: var(--bmw-silver);
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 480px) {
+  .auth-card {
+    width: 90%;
+    padding: 28px;
+  }
+}
