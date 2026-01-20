@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "../styles/reservations.css";
-
+import api from "../api";
 function CancelReservation({ reservation, onCancel }) {
   const [open, setOpen] = useState(false);
   const cancelReservation = async () => {
@@ -13,8 +13,8 @@ function CancelReservation({ reservation, onCancel }) {
         return;
       }
 
-      await axios.delete(
-        `http://localhost:3000/api/reservations/${reservation.reservation_id}`,
+      await api.delete(
+        `/api/reservations/${reservation.reservation_id}`,
         {
           headers: {
             "x-user-id": user.user_id,

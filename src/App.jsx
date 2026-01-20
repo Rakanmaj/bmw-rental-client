@@ -16,7 +16,7 @@ import Admin from "./components/Admin";
 import axios from "axios";
 import RequireAuth from "./components/RequireAuth";
 import UpdateReservation from "./components/UpdateReservation";
-
+import api from "./api";
 function App() {
   const [selectedCar, setSelectedCar] = useState(null);
 
@@ -51,15 +51,17 @@ function App() {
   }, []);
 
   const fetchCars = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/api/cars");
-      const data = await res.json();
-      setCars(data);
-      localStorage.setItem("carsData", JSON.stringify(data));
-    } catch (error) {
-      console.error("Error fetching cars data", error);
-    }
-  };
+  try {
+    const res = await api.get("/api/cars");
+
+    setCars(res.data);
+    localStorage.setItem("carsData", JSON.stringify(res.data));
+
+  } catch (error) {
+    console.error("Error fetching cars data:", error);
+  }
+};
+
 
   const handleSelectCar = (car) => {
     setSelectedCar(car);
@@ -70,8 +72,8 @@ function App() {
     const user = storedUser ? JSON.parse(storedUser) : null;
     if (!user) return;
 
-    axios
-      .get(`http://localhost:3000/api/reservations/user/${user.user_id}`, {
+    api
+      .get(`/api/reservations/user/${user.user_id}`, {
         headers: {
           "x-user-id": user.user_id,
           "x-user-role": user.role,
@@ -88,8 +90,8 @@ function App() {
   const fetchAdminReservations = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
-    axios
-      .get("http://localhost:3000/api/reservations", {
+    api
+      .get("/api/reservations", {
         headers: {
           "x-user-id": user.user_id,
           "x-user-role": user.role,

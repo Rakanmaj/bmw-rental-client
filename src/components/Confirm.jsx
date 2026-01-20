@@ -3,6 +3,7 @@ import { FaBolt, FaTachometerAlt, FaCheck } from "react-icons/fa";
 import Navbar from "./navbar";
 import axios from "axios";
 import "../styles/confirm.css";
+import api from "../api";
 
 function Confirm({ selectedCar, datesData, userDetails, onCreateReservation }) {
   const navigate = useNavigate();
@@ -37,8 +38,8 @@ function Confirm({ selectedCar, datesData, userDetails, onCreateReservation }) {
       admin_note: "",
     };
 
-    axios
-      .post("http://localhost:3000/api/reservations", reservation, {
+    api
+      .post("/api/reservations", reservation, {
         headers: {
           "x-user-id": user.user_id,
           "x-user-role": user.role,

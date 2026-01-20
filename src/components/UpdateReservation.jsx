@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "../styles/UpdateReservationPage.css";
 import Navbar from "./navbar";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 
 function UpdateReservation() {
@@ -65,8 +66,8 @@ today.setHours(0, 0, 0, 0);
     }
 
     try {
-      await axios.put(
-        `http://localhost:3000/api/reservations/user/${reservation.reservation_id}`,
+      await api.put(
+        `/api/reservations/user/${reservation.reservation_id}`,
         {
           pickup_date: pickupDate.toISOString(),
           pickup_time: pickupTime,
