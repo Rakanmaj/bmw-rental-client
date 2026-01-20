@@ -6,8 +6,10 @@ if (!baseURL) {
   console.warn("VITE_SERVER_URL is missing! Requests will hit the frontend domain.");
 }
 
+
 const api = axios.create({
-  baseURL: baseURL || "http://localhost:3000",
+  baseURL: baseURL,
 });
 
 export default api;
+
