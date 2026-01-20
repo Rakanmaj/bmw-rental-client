@@ -38,7 +38,7 @@ function Details({ selectedCar, datesData, userData, onSaveUserDetails }) {
       <div className="global-stepper">
         <div className="step-item completed">
           <div className="circle check">
-            <FaCheck className="icon" />
+            <FaCheck className="iconnnn" />
           </div>
           <span>Dates</span>
         </div>
