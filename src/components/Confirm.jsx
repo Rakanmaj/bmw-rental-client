@@ -67,7 +67,7 @@ function Confirm({ selectedCar, datesData, userDetails, onCreateReservation }) {
       <div className="global-stepper">
         <div className="step-item completed">
           <div className="circle check">
-            <FaCheck className="icon" />
+            <FaCheck className="iconnn" />
           </div>
           <span>Dates</span>
         </div>
@@ -75,7 +75,7 @@ function Confirm({ selectedCar, datesData, userDetails, onCreateReservation }) {
 
         <div className="step-item completed">
           <div className="circle check">
-            <FaCheck className="icon" />
+            <FaCheck className="iconnn" />
           </div>
           <span>Details</span>
         </div>

@@ -18,15 +18,17 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
   const [returnTime, setReturnTime] = useState(datesData?.returnTime || "");
 
   const handleContinue = (e) => {
-    if (!pickupDate || !returnDate) {
+    
+    if (!pickupDate || !returnDate || !pickupTime || !returnTime) {
       e.preventDefault();
-      alert("Please choose both pickup and return dates.");
+      alert("Please choose pickup/return dates AND times.");
       return;
     }
 
     const start = new Date(pickupDate);
     const end = new Date(returnDate);
 
+    // ✅ Return date must be same or later
     if (end < start) {
       e.preventDefault();
       alert("Return date must be the same or later than pickup date.");
@@ -42,6 +44,22 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
 
     onSaveDates(reservationDates);
   };
+
+  // Optional safety: if user somehow reached this page without selecting a car
+  if (!data) {
+    return (
+      <div className="reservation-page">
+        <Navbar />
+        <div style={{ padding: "40px", textAlign: "center" }}>
+          <h2>No car selected</h2>
+          <p>Please go back and select a car first.</p>
+          <Link to="/cars" className="continue-btn">
+            Go to Cars <FaArrowRight className="iconnn" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="reservation-page">
@@ -69,7 +87,7 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
         </div>
       </div>
 
-      {/* Main layout */}
+     {/* Main layout */}
       <div className="reservation-layout">
         {/* LEFT — CAR SUMMARY */}
         <div className="car-card">
@@ -81,18 +99,15 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
             <p className="subtitle">{data.series}</p>
 
             <div className="car-stats">
-              <span>
-                <FaBolt className="icon" /> {data.hp}
-              </span>
-              <span>
-                <FaTachometerAlt className="icon" /> {data.speed}
-              </span>
+              <span><FaBolt className="icon" /> {data.hp}</span>
+              <span><FaTachometerAlt className="icon" /> {data.speed}</span>
             </div>
 
             <p className="price-label">Price per day</p>
             <div className="price">${data.price_per_day}</div>
           </div>
         </div>
+
 
         {/* RIGHT — FORM */}
         <div className="form-panel">
@@ -124,10 +139,19 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
                   onChange={(e) => setPickupTime(e.target.value)}
                 >
                   <option value="">Select time</option>
-                  <option>08:00 AM</option>
+                  <option>09:00 AM</option>
                   <option>10:00 AM</option>
+                  <option>11:00 AM</option>
                   <option>12:00 PM</option>
+                  <option>01:00 PM</option>
+                  <option>02:00 PM</option>
                   <option>03:00 PM</option>
+                  <option>04:00 PM</option>
+                  <option>05:00 PM</option>
+                  <option>06:00 PM</option>
+                  <option>07:00 PM</option>
+                  <option>08:00 PM</option>
+                  <option>09:00 PM</option>
                 </select>
               </div>
             </div>
@@ -156,10 +180,19 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
                   onChange={(e) => setReturnTime(e.target.value)}
                 >
                   <option value="">Select time</option>
-                  <option>08:00 AM</option>
+                  <option>09:00 AM</option>
                   <option>10:00 AM</option>
+                  <option>11:00 AM</option>
                   <option>12:00 PM</option>
+                  <option>01:00 PM</option>
+                  <option>02:00 PM</option>
                   <option>03:00 PM</option>
+                  <option>04:00 PM</option>
+                  <option>05:00 PM</option>
+                  <option>06:00 PM</option>
+                  <option>07:00 PM</option>
+                  <option>08:00 PM</option>
+                  <option>09:00 PM</option>
                 </select>
               </div>
             </div>

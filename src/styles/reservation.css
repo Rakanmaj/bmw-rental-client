@@ -69,16 +69,19 @@
   align-items: flex-start;
 }
 
-/* LEFT — CAR CARD */
 .car-card {
-   width: 460px;
+  width: 460px;
   background: #0f1216;
   border-radius: 14px;
   box-shadow: 0px 20px 60px rgba(0,0,0,0.6);
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.02);
-   margin-top: -94px;   /* move card up */
+  margin-top: -94px;
+
+  /* 👇 makes the card longer downward */
+  padding-bottom: 30px;
 }
+
 
 .car-img {
   width: 100%;
