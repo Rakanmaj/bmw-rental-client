@@ -11,12 +11,26 @@ function WeatherSuggestions({ onSelectCar, cars = [] }) {
   const [city, setCity] = useState("");
   const [suggestedCars, setSuggestedCars] = useState([]);
 
+  // ✅ Loading + error states so it renders even if weather fails
+  const [loadingWeather, setLoadingWeather] = useState(true);
+  const [weatherError, setWeatherError] = useState("");
+
   // ✅ make sure cars is always an array
   const safeCars = Array.isArray(cars) ? cars : [];
 
   // Fetch weather ONLY when cars are ready
   useEffect(() => {
     if (!safeCars || safeCars.length === 0) return;
+
+    setLoadingWeather(true);
+    setWeatherError("");
+
+    // If API key missing, fallback immediately
+    if (!API_KEY) {
+      setWeatherError("Weather API key is missing");
+      setLoadingWeather(false);
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -29,18 +43,28 @@ function WeatherSuggestions({ onSelectCar, cars = [] }) {
           )
           .then((res) => {
             const weatherMain = res?.data?.weather?.[0]?.main;
-            if (!weatherMain) return;
+
+            if (!weatherMain) {
+              setWeatherError("Weather data missing");
+              setLoadingWeather(false);
+              return;
+            }
 
             setWeather(weatherMain);
             setCity(res?.data?.name || "");
             pickCarsByWeather(weatherMain);
+            setLoadingWeather(false);
           })
           .catch((err) => {
             console.error("Weather fetch error:", err);
+            setWeatherError("Weather fetch failed");
+            setLoadingWeather(false);
           });
       },
       (err) => {
         console.error("Geolocation error:", err);
+        setWeatherError("Location permission denied");
+        setLoadingWeather(false);
       }
     );
   }, [safeCars]);
@@ -69,9 +93,7 @@ function WeatherSuggestions({ onSelectCar, cars = [] }) {
       case "Rain":
       case "Thunderstorm":
       case "Snow":
-        filtered = safeCars.filter((c) =>
-          (c?.type || "").includes("SUV")
-        );
+        filtered = safeCars.filter((c) => (c?.type || "").includes("SUV"));
         break;
 
       default:
@@ -81,7 +103,43 @@ function WeatherSuggestions({ onSelectCar, cars = [] }) {
     setSuggestedCars(filtered.slice(0, 3));
   };
 
-  if (!weather) return null;
+  // ✅ Show loading UI instead of returning null
+  if (loadingWeather) {
+    return (
+      <section className="weather-section">
+        <div className="weather-container">
+          <div className="weather-header">
+            <span className="weather-tag">SMART SUGGESTIONS</span>
+            <h2>Loading weather...</h2>
+            <p>Getting your location and weather to suggest the best BMWs.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ✅ Fallback UI if weather fails (still show some cars)
+  if (weatherError || !weather) {
+    return (
+      <section className="weather-section">
+        <div className="weather-container">
+          <div className="weather-header">
+            <span className="weather-tag">SMART SUGGESTIONS</span>
+            <h2>Weather suggestions</h2>
+            <p>
+              Weather is not available right now, so here are popular picks.
+            </p>
+          </div>
+
+          <div className="cards">
+            {safeCars.slice(0, 3).map((car) => (
+              <CarCard key={car.car_id} car={car} onSelectCar={onSelectCar} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={`weather-section weather-${weather.toLowerCase()}`}>
@@ -96,11 +154,7 @@ function WeatherSuggestions({ onSelectCar, cars = [] }) {
 
         <div className="cards">
           {suggestedCars.map((car) => (
-            <CarCard
-              key={car.car_id}
-              car={car}
-              onSelectCar={onSelectCar}
-            />
+            <CarCard key={car.car_id} car={car} onSelectCar={onSelectCar} />
           ))}
         </div>
       </div>
