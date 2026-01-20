@@ -4,15 +4,19 @@ import CarCard from "./CarCard";
 import "../styles/weather.css";
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-//const TEST_CITY = "Amman"; 
-function WeatherSuggestions({ onSelectCar, cars }) {
+//const TEST_CITY = "Amman";
+
+function WeatherSuggestions({ onSelectCar, cars = [] }) {
   const [weather, setWeather] = useState(null);
   const [city, setCity] = useState("");
   const [suggestedCars, setSuggestedCars] = useState([]);
 
+  // ✅ make sure cars is always an array
+  const safeCars = Array.isArray(cars) ? cars : [];
+
   // Fetch weather ONLY when cars are ready
   useEffect(() => {
-    if (!cars || cars.length === 0) return;
+    if (!safeCars || safeCars.length === 0) return;
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -24,9 +28,11 @@ function WeatherSuggestions({ onSelectCar, cars }) {
             //`https://api.openweathermap.org/data/2.5/weather?q=${TEST_CITY}&units=metric&appid=${API_KEY}`
           )
           .then((res) => {
-            const weatherMain = res.data.weather[0].main;
+            const weatherMain = res?.data?.weather?.[0]?.main;
+            if (!weatherMain) return;
+
             setWeather(weatherMain);
-            setCity(res.data.name);
+            setCity(res?.data?.name || "");
             pickCarsByWeather(weatherMain);
           })
           .catch((err) => {
@@ -37,35 +43,39 @@ function WeatherSuggestions({ onSelectCar, cars }) {
         console.error("Geolocation error:", err);
       }
     );
-  }, [cars]);
+  }, [safeCars]);
 
   const pickCarsByWeather = (condition) => {
     let filtered = [];
 
     switch (condition) {
       case "Clear":
-        filtered = cars.filter(
+        filtered = safeCars.filter(
           (c) =>
-            c.type.includes("Convertible") ||
-            c.type.includes("Coupe") ||
-            c.type.includes("Roadster")
+            (c?.type || "").includes("Convertible") ||
+            (c?.type || "").includes("Coupe") ||
+            (c?.type || "").includes("Roadster")
         );
         break;
 
       case "Clouds":
-        filtered = cars.filter(
-          (c) => c.type.includes("Sedan") || c.type.includes("Coupe")
+        filtered = safeCars.filter(
+          (c) =>
+            (c?.type || "").includes("Sedan") ||
+            (c?.type || "").includes("Coupe")
         );
         break;
 
       case "Rain":
       case "Thunderstorm":
       case "Snow":
-        filtered = cars.filter((c) => c.type.includes("SUV"));
+        filtered = safeCars.filter((c) =>
+          (c?.type || "").includes("SUV")
+        );
         break;
 
       default:
-        filtered = cars;
+        filtered = safeCars;
     }
 
     setSuggestedCars(filtered.slice(0, 3));
