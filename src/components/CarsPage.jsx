@@ -1,23 +1,22 @@
 import { useState, useEffect } from "react";
 import CarCard from "./CarCard";
 import "../styles/fleet.css";
-
+import api from "../api";
 function CarsPage({ onSelectCar = () => {} }) {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/cars");
-        const data = await res.json();
-        setCars(data);
-      } catch (error) {
-        console.error("Error fetching car data:", error);
-      }
-    };
+  const fetchCars = async () => {
+    try {
+      const res = await api.get("/api/cars");
+      setCars(res.data);
+    } catch (error) {
+      console.error("Error fetching car data:", error);
+    }
+  };
 
-    fetchCars();
-  }, []);
+  fetchCars();
+}, []);
 
   return (
     <section className="fleet">

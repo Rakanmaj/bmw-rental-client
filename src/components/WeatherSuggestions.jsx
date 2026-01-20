@@ -3,8 +3,8 @@ import axios from "axios";
 import CarCard from "./CarCard";
 import "../styles/weather.css";
 
-const API_KEY = "b54bde8d5b4390e8d30ae5352023561d";
-
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+//const TEST_CITY = "Amman"; 
 function WeatherSuggestions({ onSelectCar, cars }) {
   const [weather, setWeather] = useState(null);
   const [city, setCity] = useState("");
@@ -21,6 +21,7 @@ function WeatherSuggestions({ onSelectCar, cars }) {
         axios
           .get(
             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${API_KEY}`
+            //`https://api.openweathermap.org/data/2.5/weather?q=${TEST_CITY}&units=metric&appid=${API_KEY}`
           )
           .then((res) => {
             const weatherMain = res.data.weather[0].main;

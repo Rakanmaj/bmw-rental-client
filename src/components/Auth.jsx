@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";  // Import useNavigate from react-router-dom
 import "../styles/auth.css";
-
+import api from "../api";
 function Auth({ onLogin }) {
   const [mode, setMode] = useState("signin");
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ function Auth({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+      const res = await api.post("/api/auth/login", { email, password });
       // On success, store user data in localStorage
       localStorage.setItem("user", JSON.stringify(res.data.user));
       onLogin(res.data.user);  // Call the onLogin function passed from the parent component
@@ -30,7 +30,7 @@ function Auth({ onLogin }) {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/signup", {
+      const res = await api.post("/api/auth/signup", {
         full_name: fullName,
         email,
         phone,

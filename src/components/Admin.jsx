@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "../styles/admin.css";
+import api from "../api";
 import AlertDismissible from "./AlertDismissible";
 
 function Admin({ reservations, onUpdateStatus }) {
@@ -8,8 +9,8 @@ function Admin({ reservations, onUpdateStatus }) {
    const user = JSON.parse(localStorage.getItem("user"));
   const updateStatus = async (id, status, note) => {
     try {
-      await axios.put(
-  `http://localhost:3000/api/reservations/${id}`,
+     await api.put(
+  `/api/reservations/${id}`,
   
   {
     status,
