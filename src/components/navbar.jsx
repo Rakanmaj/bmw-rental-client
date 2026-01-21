@@ -41,7 +41,7 @@ function Navbar() {
         ) : (
           <button
             className="nav-link" // Use the same CSS class as Sign In button for consistency
-            onClick={handleLogout}  // Call handleLogout when the button is clicked
+            onClick={handleLogout}  
           >
             Logout
           </button>

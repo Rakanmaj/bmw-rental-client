@@ -1,12 +1,7 @@
 // Reservations.jsx
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import {
-  FaCalendarAlt,
-  FaUser,
-  FaPhoneAlt,
-  FaArrowRight,
-} from "react-icons/fa";
+import { FaCalendarAlt, FaUser, FaPhoneAlt, FaArrowRight } from "react-icons/fa";
 
 import "../styles/reservations.css";
 import "../styles/icons.css";
@@ -15,18 +10,20 @@ import CancelReservation from "./CancelReservation";
 function Reservations({ reservations, onCancel, onRefresh }) {
   const location = useLocation();
 
-  const handleCardMove = (e) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    card.style.setProperty("--mx", `${x}%`);
-    card.style.setProperty("--my", `${y}%`);
+  const handleCardMove = (event) => {
+    const cardElement = event.currentTarget;
+    const cardRect = cardElement.getBoundingClientRect();
+
+    const mouseXPercent = ((event.clientX - cardRect.left) / cardRect.width) * 100;
+    const mouseYPercent = ((event.clientY - cardRect.top) / cardRect.height) * 100;
+
+    cardElement.style.setProperty("--mx", `${mouseXPercent}%`);
+    cardElement.style.setProperty("--my", `${mouseYPercent}%`);
   };
 
   useEffect(() => {
     onRefresh();
-  }, [location.pathname]); // (same logic)
+  }, [location.pathname]); 
 
   return (
     <div className="reservations-page">
@@ -57,54 +54,62 @@ function Reservations({ reservations, onCancel, onRefresh }) {
         </div>
       )}
 
-      {reservations.map((res) => (
+      {reservations.map((reservation) => (
         <div
-          key={res.reservation_id}
+          key={reservation.reservation_id}
           className="reservation-card"
           onMouseMove={handleCardMove}
         >
           <div className="reservation-image">
-            <img src={`/assets/${res.image_url}`} alt={res.car_name} />
+            <img
+              src={`/assets/${reservation.image_url}`}
+              alt={reservation.car_name}
+            />
           </div>
 
           <div className="reservation-info">
-            <h3>{res.car_name}</h3>
+            <h3>{reservation.car_name}</h3>
 
-            <span className={`status ${res.status}`}>
-              {res.status?.toUpperCase()}
+            <span className={`status ${reservation.status}`}>
+              {reservation.status?.toUpperCase()}
             </span>
 
-            {res.status === "denied" && (
-              <p className="admin-note">Reason: {res.admin_note}</p>
+            {reservation.status === "denied" && (
+              <p className="admin-note">Reason: {reservation.admin_note}</p>
             )}
 
             <p className="reservation-meta">
               <FaCalendarAlt className="icon" />{" "}
-              {new Date(res.pickup_date).toLocaleDateString("en-GB")} at {res.pickup_time}
+              {new Date(reservation.pickup_date).toLocaleDateString("en-GB")} at{" "}
+              {reservation.pickup_time}
               {" "}–{" "}
-              {new Date(res.return_date).toLocaleDateString("en-GB")} at {res.return_time}
-              {" "} — <FaUser className="icon" /> {res.full_name}
-              {" "} — <FaPhoneAlt className="icon" /> {res.phone}
+              {new Date(reservation.return_date).toLocaleDateString("en-GB")} at{" "}
+              {reservation.return_time}
+              {" "} — <FaUser className="icon" /> {reservation.full_name}
+              {" "} — <FaPhoneAlt className="icon" /> {reservation.phone}
             </p>
           </div>
 
           <div className="reservation-summary">
-            <div className="price">${res.total_price}</div>
-            <div className="reservation-id">ID: {res.reservation_id}</div>
+            <div className="price">${reservation.total_price}</div>
+            <div className="reservation-id">ID: {reservation.reservation_id}</div>
           </div>
 
-          {/* ✅ CANCEL (component-based, authorized) */}
-          {res.status !== "accepted" && (
-            <CancelReservation reservation={res} onCancel={onCancel} />
+          {/* CANCEL (component-based, authorized) */}
+          {reservation.status !== "accepted" && (
+            <CancelReservation reservation={reservation} onCancel={onCancel} />
           )}
 
-          {/* ✅ UPDATE (link-based, clean) */}
-          {res.status === "pending" && (
+          {/* UPDATE (link-based, clean) */}
+          {reservation.status === "pending" && (
             <Link
               to="/update-reservation"
               className="update-btn"
               onClick={() =>
-                localStorage.setItem("reservationToUpdate", JSON.stringify(res))
+                localStorage.setItem(
+                  "reservationToUpdate",
+                  JSON.stringify(reservation)
+                )
               }
             >
               Update

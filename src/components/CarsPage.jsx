@@ -8,8 +8,8 @@ function CarsPage({ onSelectCar = () => {} }) {
   useEffect(() => {
   const fetchCars = async () => {
     try {
-      const res = await api.get("/api/cars");
-      setCars(res.data);
+      const response = await api.get("/api/cars");
+      setCars(response.data);
     } catch (error) {
       console.error("Error fetching car data:", error);
     }

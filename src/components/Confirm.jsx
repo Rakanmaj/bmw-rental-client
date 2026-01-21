@@ -8,10 +8,10 @@ import api from "../api";
 function Confirm({ selectedCar, datesData, userDetails, onCreateReservation }) {
   const navigate = useNavigate();
 
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // ✅ naming convention (constant)
+  const OneDayMs = 24 * 60 * 60 * 1000; 
   const diffDays = Math.max(
     1,
-    Math.round(Math.abs(datesData.returnDate - datesData.pickupDate) / ONE_DAY_MS)
+    Math.round(Math.abs(datesData.returnDate - datesData.pickupDate) / OneDayMs)
   );
 
   const handleConfirm = () => {
@@ -23,7 +23,6 @@ function Confirm({ selectedCar, datesData, userDetails, onCreateReservation }) {
       return;
     }
 
-    // ✅ removed wrong console.log (userDetails.diffDays doesn't exist)
     // console.log(userDetails.diffDays);
 
     const reservation = {

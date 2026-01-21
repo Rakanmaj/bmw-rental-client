@@ -94,7 +94,7 @@ function Footer() {
       <div className="footer-bottom">
         <div className="divider" />
         <p>
-          © 2025 BMW Rental. All rights reserved. The Ultimate Driving Experience.
+          © 2025 Rakan AL-Shamali. BMW Rental. All rights reserved. The Ultimate Driving Experience.
         </p>
       </div>
     </footer>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+
 import "../styles/reservations.css";
 import api from "../api";
 function CancelReservation({ reservation, onCancel }) {
@@ -23,7 +23,7 @@ function CancelReservation({ reservation, onCancel }) {
         }
       );
 
-      // ✅ Update UI instantly (no refresh needed)
+      // Update UI instantly (no refresh needed)
       onCancel(reservation.reservation_id);
       setOpen(false);
     } catch (err) {

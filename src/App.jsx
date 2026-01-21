@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/navbar";
 import Hero from "./components/Hero";
 import WeatherSuggestions from "./components/WeatherSuggestions";
@@ -13,10 +14,11 @@ import About from "./components/About";
 import Reservations from "./components/Reservations";
 import Auth from "./components/Auth";
 import Admin from "./components/Admin";
-import axios from "axios";
 import RequireAuth from "./components/RequireAuth";
 import UpdateReservation from "./components/UpdateReservation";
+
 import api from "./api";
+
 function App() {
   const [selectedCar, setSelectedCar] = useState(null);
 
@@ -39,75 +41,92 @@ function App() {
   const [adminReservations, setAdminReservations] = useState([]);
   const [editReservation, setEditReservation] = useState(null);
 
-  // ✅ Fetch cars once (single source of truth)
-  useEffect(() => {
-    const storedCars = localStorage.getItem("carsData");
-
-    if (storedCars) {
-      setCars(JSON.parse(storedCars));
-    } else {
-      fetchCars();
-    }
-  }, []);
-
+  // ----------------------------
+  // Cars (single source of truth)
+  // ----------------------------
   const fetchCars = async () => {
-  try {
-    const res = await api.get("/api/cars");
+    try {
+      const carsResponse = await api.get("/api/cars");
+      const carsData = carsResponse.data;
 
-    setCars(res.data);
-    localStorage.setItem("carsData", JSON.stringify(res.data));
+      setCars(carsData);
+      localStorage.setItem("carsData", JSON.stringify(carsData));
+    } catch (fetchCarsError) {
+      console.error("Error fetching cars data:", fetchCarsError);
+    }
+  };
 
-  } catch (error) {
-    console.error("Error fetching cars data:", error);
-  }
-};
+  useEffect(() => {
+    const storedCarsData = localStorage.getItem("carsData");
 
+    if (storedCarsData) {
+      setCars(JSON.parse(storedCarsData));
+      return;
+    }
+
+    fetchCars();
+  }, []);
 
   const handleSelectCar = (car) => {
     setSelectedCar(car);
   };
 
-  const fetchUserReservations = () => {
+  // ----------------------------
+  // Reservations (User)
+  // ----------------------------
+  const fetchUserReservations = async () => {
     const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
-    if (!user) return;
+    const currentUser = storedUser ? JSON.parse(storedUser) : null;
+    if (!currentUser) return;
 
-    api
-      .get(`/api/reservations/user/${user.user_id}`, {
-        headers: {
-          "x-user-id": user.user_id,
-          "x-user-role": user.role,
-        },
-      })
-      .then((response) => {
-        setReservations(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching reservations:", error);
-      });
+    try {
+      const reservationsResponse = await api.get(
+        `/api/reservations/user/${currentUser.user_id}`,
+        {
+          headers: {
+            "x-user-id": currentUser.user_id,
+            "x-user-role": currentUser.role,
+          },
+        }
+      );
+
+      setReservations(reservationsResponse.data);
+    } catch (fetchReservationsError) {
+      console.error("Error fetching reservations:", fetchReservationsError);
+    }
   };
 
-  const fetchAdminReservations = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+  // ----------------------------
+  // Reservations (Admin)
+  // ----------------------------
+  const fetchAdminReservations = async () => {
+    const storedUser = localStorage.getItem("user");
+    const currentUser = storedUser ? JSON.parse(storedUser) : null;
+    if (!currentUser) return;
 
-    api
-      .get("/api/reservations", {
+    try {
+      const adminReservationsResponse = await api.get("/api/reservations", {
         headers: {
-          "x-user-id": user.user_id,
-          "x-user-role": user.role,
+          "x-user-id": currentUser.user_id,
+          "x-user-role": currentUser.role,
         },
-      })
-      .then((response) => {
-        setAdminReservations(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching admin reservations:", error);
       });
+
+      setAdminReservations(adminReservationsResponse.data);
+    } catch (fetchAdminReservationsError) {
+      console.error(
+        "Error fetching admin reservations:",
+        fetchAdminReservationsError
+      );
+    }
   };
 
-  const handleLogin = (userData) => {
-    setUserDetails(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  // ----------------------------
+  // Auth handlers
+  // ----------------------------
+  const handleLogin = (authenticatedUser) => {
+    setUserDetails(authenticatedUser);
+    localStorage.setItem("user", JSON.stringify(authenticatedUser));
     fetchUserReservations();
   };
 
@@ -121,42 +140,54 @@ function App() {
     });
   };
 
+  // Load user from localStorage once
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUserDetails(user);
-      fetchUserReservations();
-    }
+    if (!storedUser) return;
+
+    const currentUser = JSON.parse(storedUser);
+    setUserDetails(currentUser);
+    fetchUserReservations();
   }, []);
 
-  const handleCreateReservation = (reservation) => {
-    setReservations((prev) => [
-      ...prev,
-      { ...reservation, status: "pending", admin_note: "" }, // ✅ fixed naming
+  // ----------------------------
+  // Reservation actions
+  // ----------------------------
+  const handleCreateReservation = (newReservation) => {
+    setReservations((previousReservations) => [
+      ...previousReservations,
+      { ...newReservation, status: "pending", admin_note: "" }, // ✅ fixed naming
     ]);
+
     fetchUserReservations();
   };
 
-  const handleCancelReservation = (id) => {
-    setReservations((prev) => prev.filter((r) => r.reservation_id !== id));
+  const handleCancelReservation = (reservationId) => {
+    setReservations((previousReservations) =>
+      previousReservations.filter(
+        (reservation) => reservation.reservation_id !== reservationId
+      )
+    );
   };
 
-  const handleUpdateReservationStatus = (id, status, note) => {
-    setAdminReservations((prev) =>
-      prev.map((r) =>
-        r.reservation_id === id ? { ...r, status, admin_note: note } : r
+  const handleUpdateReservationStatus = (reservationId, status, note) => {
+    setAdminReservations((previousAdminReservations) =>
+      previousAdminReservations.map((reservation) =>
+        reservation.reservation_id === reservationId
+          ? { ...reservation, status, admin_note: note }
+          : reservation
       )
     );
 
     fetchUserReservations();
   };
 
+  // If user is admin, fetch admin reservations
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
+    const currentUser = storedUser ? JSON.parse(storedUser) : null;
 
-    if (user && user.role === "admin") {
+    if (currentUser && currentUser.role === "admin") {
       fetchAdminReservations();
     }
   }, [userDetails.role]);

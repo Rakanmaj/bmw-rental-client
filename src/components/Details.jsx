@@ -22,10 +22,10 @@ function Details({ selectedCar, datesData, userData, onSaveUserDetails }) {
     box.style.setProperty("--y", `${y}px`);
   };
 
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // ✅ naming convention
+  const OneDayMs = 24 * 60 * 60 * 1000;
   const diffDays = Math.max(
     1,
-    Math.round(Math.abs(datesData.returnDate - datesData.pickupDate) / ONE_DAY_MS)
+    Math.round(Math.abs(datesData.returnDate - datesData.pickupDate) / OneDayMs)
   );
 
   const totalPrice = diffDays * selectedCar.price_per_day;
