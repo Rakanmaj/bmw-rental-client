@@ -69,7 +69,7 @@
   align-items: flex-start;
 }
 
-.car-card {
+.car-cardd {
   width: 460px;
   background: #0f1216;
   border-radius: 14px;
@@ -78,8 +78,12 @@
   border: 1px solid rgba(255,255,255,0.02);
   margin-top: -94px;
 
+  width: 100%;
+  max-width: 460px;
+  min-width: 360px;
+
   /* 👇 makes the card longer downward */
-  padding-bottom: 30px;
+  padding-bottom: 10px;
 }
 
 

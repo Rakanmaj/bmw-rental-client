@@ -90,7 +90,7 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
      {/* Main layout */}
       <div className="reservation-layout">
         {/* LEFT — CAR SUMMARY */}
-        <div className="car-card">
+        <div className="car-cardd">
           <img src={`/assets/${data.image_url}`} alt={data.name} className="car-img" />
 
           <div className="car-content">
