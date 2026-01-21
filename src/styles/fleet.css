@@ -93,15 +93,20 @@
   border-radius:12px;
   padding:10px 16px;
 }
-
 .cards {
   display: grid;
-  gap: 24px;
   grid-template-columns: repeat(3, 360px);
   justify-content: center;
-  margin-top: 100px;
-}
+align-items: stretch;
+  column-gap: 24px;   
+  row-gap: 40px;    
+  margin-top: 60px;
 
+  column-gap: 24px !important;
+  row-gap: 70px !important;
+
+      
+}
 .card-body .desc {
   color: #9aa6b3;
   font-size: 14px;
@@ -128,7 +133,8 @@
   width: 100%;
   height: 100%; /* allow stretch */
   max-width: 360px;
-  margin-bottom: 110px;
+
+  
 }
 
 .car-card:hover {
@@ -182,6 +188,7 @@
   flex: 1; /* 🔥 THIS is the key */
   display:flex;
   flex-direction:column;
+  
 }
 
 
@@ -190,7 +197,8 @@
   font-size:13px;
 }
 .card-body h3{ margin:8px 0 8px; }
-.card-body .desc{ color:#9aa6b3; font-size:14px; line-height:1.55; margin-bottom:14px; }
+.card-body .desc{ color:#9aa6b3; font-size:14px; line-height:1.55; margin-bottom:14px; 
+}
 .card-stats{ color:#9aa6b3; display:flex; gap:14px; font-size:13px; margin-bottom:10px; }
 .card-body hr{ border:0; height:1px; background:rgba(255,255,255,0.03); margin:10px 0 12px; }
 .card-footer{ display:flex; align-items:center; justify-content:space-between; }
@@ -207,6 +215,7 @@
   border-radius:12px;
   font-size:12px;
   font-weight:600;
+ 
 }
 
 .car-card button {
@@ -225,8 +234,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 .card-stats {
   min-height: 22px; /* keeps spacing consistent */
 }
+
+
