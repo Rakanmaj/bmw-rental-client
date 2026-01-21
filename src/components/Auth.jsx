@@ -1,13 +1,14 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 import api from "../api";
 
 function Auth({ onLogin }) {
   const [mode, setMode] = useState("signin");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -17,7 +18,7 @@ function Auth({ onLogin }) {
   // =====================
   // VALIDATION FUNCTIONS
   // =====================
-  const validateSignIn = () => {
+  const validateSignInForm = () => {
     if (!email || !password) {
       alert("Please fill in all fields.");
       return false;
@@ -25,7 +26,7 @@ function Auth({ onLogin }) {
     return true;
   };
 
-  const validateSignUp = () => {
+  const validateSignUpForm = () => {
     if (!fullName || !email || !password || !confirmPassword || !phone) {
       alert("Please fill in all fields.");
       return false;
@@ -36,11 +37,18 @@ function Auth({ onLogin }) {
       return false;
     }
 
+    // phone must be numbers only
+    if (!/^\d+$/.test(phone)) {
+      alert("Phone number must contain numbers only.");
+      return false;
+    }
+
     if (password.length < 6) {
       alert("Password must be at least 6 characters.");
       return false;
     }
 
+    // password must match confirm password
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return false;
@@ -52,16 +60,16 @@ function Auth({ onLogin }) {
   // =====================
   // LOGIN
   // =====================
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    if (!validateSignIn()) return;
+  const handleSignIn = async (event) => {
+    event.preventDefault();
+    if (!validateSignInForm()) return;
 
     try {
-      const res = await api.post("/api/auth/login", { email, password });
+      const response = await api.post("/api/auth/login", { email, password });
+      const authenticatedUser = response.data.user;
 
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      onLogin(res.data.user);
+      localStorage.setItem("user", JSON.stringify(authenticatedUser));
+      onLogin(authenticatedUser);
       navigate("/");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
@@ -71,21 +79,22 @@ function Auth({ onLogin }) {
   // =====================
   // SIGN UP
   // =====================
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-
-    if (!validateSignUp()) return;
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    if (!validateSignUpForm()) return;
 
     try {
-      const res = await api.post("/api/auth/signup", {
+      const response = await api.post("/api/auth/signup", {
         full_name: fullName,
         email,
         phone,
         password,
       });
 
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      onLogin(res.data.user);
+      const authenticatedUser = response.data.user;
+
+      localStorage.setItem("user", JSON.stringify(authenticatedUser));
+      onLogin(authenticatedUser);
       navigate("/");
     } catch (error) {
       alert(error.response?.data?.message || "Sign-up failed");
@@ -95,7 +104,6 @@ function Auth({ onLogin }) {
   return (
     <div className="auth-page">
       <div className="auth-card">
-
         {/* BRAND */}
         <div className="auth-brand">
           <h1>BMW Rentals</h1>
@@ -109,12 +117,14 @@ function Auth({ onLogin }) {
         {/* TOGGLE */}
         <div className="auth-toggle">
           <button
+            type="button"
             className={mode === "signin" ? "active" : ""}
             onClick={() => setMode("signin")}
           >
             Sign In
           </button>
           <button
+            type="button"
             className={mode === "signup" ? "active" : ""}
             onClick={() => setMode("signup")}
           >
@@ -123,15 +133,15 @@ function Auth({ onLogin }) {
         </div>
 
         {/* FORM */}
-        <form>
+        <form onSubmit={mode === "signin" ? handleSignIn : handleSignUp}>
           {mode === "signup" && (
             <div className="auth-field">
               <label>Full Name</label>
               <input
                 type="text"
-                placeholder="John Doe"
+                placeholder="Rakan majed"
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(event) => setFullName(event.target.value)}
               />
             </div>
           )}
@@ -142,7 +152,7 @@ function Auth({ onLogin }) {
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </div>
 
@@ -152,7 +162,7 @@ function Auth({ onLogin }) {
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
             />
           </div>
 
@@ -163,7 +173,7 @@ function Auth({ onLogin }) {
                 type="password"
                 placeholder="••••••••"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(event) => setConfirmPassword(event.target.value)}
               />
             </div>
           )}
@@ -175,16 +185,14 @@ function Auth({ onLogin }) {
                 type="text"
                 placeholder="Your phone number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(event) =>
+                  setPhone(event.target.value.replace(/[^0-9]/g, ""))
+                }
               />
             </div>
           )}
 
-          <button
-            type="submit"
-            className="auth-submit"
-            onClick={mode === "signin" ? handleLogin : handleSignUp}
-          >
+          <button type="submit" className="auth-submit">
             {mode === "signin" ? "Sign In" : "Create Account"}
           </button>
         </form>

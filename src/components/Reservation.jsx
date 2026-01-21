@@ -28,7 +28,7 @@ function Reservation({ selectedCar = null, datesData, onSaveDates }) {
     const start = new Date(pickupDate);
     const end = new Date(returnDate);
 
-    // ✅ Return date must be same or later
+    // Return date must be same or later
     if (end < start) {
       e.preventDefault();
       alert("Return date must be the same or later than pickup date.");
